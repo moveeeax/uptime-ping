@@ -1,0 +1,18 @@
+# Binaries
+/uptime-ping
+/dist/
+*.exe
+*.out
+
+# Test / coverage
+*.test
+coverage.out
+coverage.html
+
+# Local config with real secrets
+/checks.local.yaml
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store

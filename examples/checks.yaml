@@ -1,0 +1,28 @@
+# uptime-ping example configuration.
+# Run with: uptime-ping --config examples/checks.yaml
+
+listen: ":8080"   # status page + API + /metrics
+history: 100      # samples kept per service for uptime/latency history
+
+# Fire a webhook whenever any service flips up<->down.
+# Works with Slack / Discord incoming webhooks or any JSON receiver.
+webhook:
+  url: ""         # e.g. https://hooks.slack.com/services/XXX/YYY/ZZZ
+
+targets:
+  - name: example-site
+    type: http
+    url: https://example.com
+    interval: 30s
+    timeout: 5s
+    retries: 2            # immediate retries within a cycle before it counts as a failure
+    expect_status: 200
+    failure_threshold: 2  # consecutive failing cycles before flipping to DOWN
+    success_threshold: 1  # consecutive passing cycles before flipping back to UP
+
+  - name: local-postgres
+    type: tcp
+    address: 127.0.0.1:5432
+    interval: 15s
+    timeout: 3s
+    retries: 1

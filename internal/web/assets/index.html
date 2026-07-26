@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>uptime-ping status</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: #0f1115; color: #e6e6e6; }
+  header { padding: 20px 24px; border-bottom: 1px solid #242832; }
+  h1 { margin: 0; font-size: 20px; }
+  .sub { color: #8a91a0; font-size: 13px; margin-top: 4px; }
+  main { padding: 16px 24px; display: grid; gap: 12px; max-width: 900px; }
+  .card { background: #161a22; border: 1px solid #242832; border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .up { background: #27c07a; } .down { background: #e5484d; } .unknown { background: #8a91a0; }
+  .name { font-weight: 600; }
+  .meta { color: #8a91a0; font-size: 12px; margin-top: 2px; }
+  .right { margin-left: auto; text-align: right; font-variant-numeric: tabular-nums; }
+  .pct { font-weight: 600; } .lat { color: #8a91a0; font-size: 12px; }
+  .spark { display: flex; gap: 2px; margin-top: 6px; }
+  .bar { width: 5px; height: 16px; border-radius: 1px; background: #2b3040; }
+  .bar.ok { background: #27c07a; } .bar.bad { background: #e5484d; }
+  footer { color: #565d6d; font-size: 12px; padding: 16px 24px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>uptime-ping</h1>
+  <div class="sub" id="sub">loading…</div>
+</header>
+<main id="services"></main>
+<footer>Auto-refreshes every 5s · <a href="/api/status" style="color:#6b8afd">/api/status</a> · <a href="/metrics" style="color:#6b8afd">/metrics</a></footer>
+<script>
+function spark(history) {
+  const last = history.slice(-30);
+  return '<div class="spark">' + last.map(s =>
+    '<div class="bar ' + (s.ok ? 'ok' : 'bad') + '" title="' + (s.err || 'ok') + '"></div>'
+  ).join('') + '</div>';
+}
+async function refresh() {
+  try {
+    const r = await fetch('/api/status');
+    const data = await r.json();
+    const el = document.getElementById('services');
+    el.innerHTML = data.services.map(s => `
+      <div class="card">
+        <span class="dot ${s.state}"></span>
+        <div>
+          <div class="name">${s.name}</div>
+          <div class="meta">${s.type} · ${s.target}</div>
+          ${spark(s.history || [])}
+        </div>
+        <div class="right">
+          <div class="pct">${s.uptime_pct.toFixed(1)}%</div>
+          <div class="lat">${s.last_latency_ms.toFixed(0)} ms</div>
+        </div>
+      </div>`).join('');
+    const up = data.services.filter(s => s.state === 'up').length;
+    document.getElementById('sub').textContent =
+      up + '/' + data.services.length + ' services up · updated ' + new Date().toLocaleTimeString();
+  } catch (e) {
+    document.getElementById('sub').textContent = 'error loading status';
+  }
+}
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>

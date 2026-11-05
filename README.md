@@ -113,3 +113,7 @@ make smoke      # build, then validate the example config
 ## License
 
 [MIT](LICENSE)
+
+---
+
+**Archived on 2026-11-05.** HTTP/TCP/DNS/ICMP/SSH checks, condition expressions, many alert providers, status page, badges, maintenance windows and persistent storage. Uptime Kuma covers the UI-driven case. uptime-ping's only edge is size and no dependencies, which is not enough of an angle to justify building any of the features below. If it is kept as a minimal or reference tool, build the first two features only.

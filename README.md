@@ -1,7 +1,7 @@
 # uptime-ping
 
 [![ci](https://github.com/moveeeax/uptime-ping/actions/workflows/ci.yml/badge.svg)](https://github.com/moveeeax/uptime-ping/actions/workflows/ci.yml)
-[![Go](https://img.shields.io/badge/go-1.22%2B-00ADD8?logo=go&logoColor=white)](https://go.dev/)
+[![Go](https://img.shields.io/badge/go-1.26%2B-00ADD8?logo=go&logoColor=white)](https://go.dev/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 A tiny self-hosted status page and uptime monitor — **one static Go binary, no dependencies**.
